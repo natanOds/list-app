@@ -5,23 +5,23 @@ import { styles } from './styles';
 import { Participant } from '../../components/Participant';
 
 export function Home(){
-    const [participants, setParticipants] = useState(['João']);
-
+    const [participants, setParticipants] = useState<string[]>([]);
+    const [participantName, setparticipantName] = useState('');
 
     function handleParticipantAdd(){
-        if(participants.includes('Thiago')) {
+        if(participants.includes(participantName)) {
         return Alert.alert("Participante Existe", "Ja existe participante na lista com esse nome") 
         }
 
-        setParticipants( prevState => [...prevState,'Ana']);
-      
+        setParticipants( prevState => [...prevState, participantName]);
+        setparticipantName('');
     }
 
     function handleParticipantRemove(name: string){
         Alert.alert("Remover", `Deseja remover o participante ${name}?`, [
             {
                 text: 'Sim',
-                onPress: () => Alert.alert("Deletado")
+                onPress: () => setParticipants(prevState => prevState.filter(participant => participant !== name))
             },
             {
              text: 'Não',
@@ -39,6 +39,8 @@ export function Home(){
         <TextInput style={styles.input}
         placeholder="Nome do Participante"
         placeholderTextColor="#363636"
+        onChangeText={setparticipantName}
+        value={participantName}
     />
 
     <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
@@ -47,7 +49,7 @@ export function Home(){
     </View>  
 
      <FlatList 
-        data={participants}
+        data={participants} 
         keyExtractor={item => item}
         renderItem={({ item }) => (
             <Participant 
